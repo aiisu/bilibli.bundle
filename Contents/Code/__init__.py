@@ -1,9 +1,10 @@
-TITLE = 'Ask A Ninja'
+TITLE = 'Bilibili'
 RSS_FEED = 'http://askaninja.blip.tv/rss'
 NS = {'blip':'http://blip.tv/dtd/blip/1.0', 'media':'http://search.yahoo.com/mrss/'}
 ART = 'art-default.jpg'
 ICON = 'icon-default.png'
 ICON_SEARCH = 'icon-search.png'
+
 
 #####################################################################
 # This (optional) function is initially called by the PMS framework to
@@ -31,4 +32,29 @@ VideoClipObject.art = R(ART)
 def MainMenu():
 
   oc = ObjectContainer()
-  return oc 
+
+  for video in XML.ElementFromURL(RSS_FEED).xpath('//item'):
+
+    url = video.xpath('./link')[0].text
+    title = video.xpath('./title')[0].text
+    date = video.xpath('./pubDate')[0].text
+    date = Datetime.ParseDate(date)
+    summary = video.xpath('./blip:puredescription', namespaces=NS)[0].text
+    thumb = video.xpath('./media:thumbnail', namespaces=NS)[0].get('url')
+
+    if thumb[0:4] != 'http':
+      thumb = 'http://a.images.blip.tv' + thumb
+
+    duration_text = video.xpath('./blip:runtime', namespaces=NS)[0].text
+    duration = int(duration_text) * 1000
+
+    oc.add(VideoClipObject(
+      url = url,
+      title = title,
+      summary = summary,
+      thumb = Callback(Thumb, url=thumb),
+      duration = duration,
+      originally_available_at = date
+    ))
+
+  return oc
