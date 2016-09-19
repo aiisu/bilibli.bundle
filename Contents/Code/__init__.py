@@ -31,30 +31,28 @@ VideoClipObject.art = R(ART)
 @handler('/video/askaninja', TITLE)
 def MainMenu():
 
-  oc = ObjectContainer()
+    oc = ObjectContainer()
 
-  for video in XML.ElementFromURL(RSS_FEED).xpath('//item'):
+#  for video in XML.ElementFromURL(RSS_FEED).xpath('//item'):
 
-    url = video.xpath('./link')[0].text
-    title = video.xpath('./title')[0].text
-    date = video.xpath('./pubDate')[0].text
-    date = Datetime.ParseDate(date)
-    summary = video.xpath('./blip:puredescription', namespaces=NS)[0].text
-    thumb = video.xpath('./media:thumbnail', namespaces=NS)[0].get('url')
+#    url = video.xpath('./link')[0].text
+#    title = video.xpath('./title')[0].text
+#    date = video.xpath('./pubDate')[0].text
+#    date = Datetime.ParseDate(date)
+#    summary = video.xpath('./blip:puredescription', namespaces=NS)[0].text
+#    thumb = video.xpath('./media:thumbnail', namespaces=NS)[0].get('url')
 
-    if thumb[0:4] != 'http':
-      thumb = 'http://a.images.blip.tv' + thumb
+#    if thumb[0:4] != 'http':
+#      thumb = 'http://a.images.blip.tv' + thumb
 
-    duration_text = video.xpath('./blip:runtime', namespaces=NS)[0].text
-    duration = int(duration_text) * 1000
+#    duration_text = video.xpath('./blip:runtime', namespaces=NS)[0].text
+#    duration = int(duration_text) * 1000
 
     oc.add(VideoClipObject(
       url = url,
-      title = title,
-      summary = summary,
-      thumb = Callback(Thumb, url=thumb),
-      duration = duration,
-      originally_available_at = date
+      title = "test",
+      summary = "test",
+      duration = 2000
     ))
 
-  return oc
+    return oc
